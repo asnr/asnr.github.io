@@ -6,6 +6,7 @@ summary:    1st
 categories: one
 ---
 
+Remember, you probably don't want UTF-16 output, so use `| out-file "$FILE" -encoding utf8` or `| out-file "$FILE" -encoding ascii` instead of `> $FILE`, which is just syntactic sugar for `| out-file $FILE` anyway.
 
 `$ head`
 --------
