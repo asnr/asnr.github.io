@@ -55,3 +55,12 @@ foo bar
 Calling Powershell from `cmd.exe`
 ---------------------------------
 
+A less than pleasant example
+----------------------------
+
+To replace all of the occurences of `||` in `in.txt` with `| |` and send the result to `out.txt` encoded in UTF-8:
+
+```posh
+get-content in.txt | % {$_ replace "\|\|","| |"} | % {$_ -replace "\|\|","| |"} | out-file out.txt -encoding utf8
+```
+
