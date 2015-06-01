@@ -31,7 +31,12 @@ get-content $FILE | select-object -last $n
 > get-content $FILE | where {$_ -match "$PATTERN"}
 ```
 
-Supports at least Extended Regular Expressions. (Note you can quickly test your regular expressions using `"foo bar" -match "b|c"`.)
+Here we make use of the regular expression matching command `-match`, which supports at least Extended Regular Expressions:
+
+```posh
+> "foo bar" -match "b|c"
+True
+```
 
 
 `$ sed`
