@@ -8,25 +8,38 @@ categories: one
 
 Remember, you probably don't want UTF-16 output, so use `| out-file "$FILE" -encoding utf8` or `| out-file "$FILE" -encoding ascii` instead of `> $FILE`, which is just syntactic sugar for `| out-file $FILE` anyway.
 
+
+`$ $CMD --help`
+-------
+```posh
+> help $CMD
+```
+The command `help` is an alias for `get-help`. The "REMARKS" section at the bottom of the `help` output has good further pointers, like what command to use to see examples and more detailed information.
+
+`$ cheat`
+---------
+```posh
+> get-help $CMD -examples
+```
+Weirdly `help $CMD -examples` does the `--more--` thing. I prefer using the scrollbar to pressing enter, but that's just me.
+
+
 `$ head`
 --------
-
 ```posh
-get-content $FILE -TotalCount $n
+> get-content $FILE -TotalCount $n
 ```
 
 
 `$ tail`
 --------
-
 ```posh
-get-content $FILE | select-object -last $n
+> get-content $FILE | select-object -last $n
 ```
 
 
-`$ grep`
---------
-
+`$ grep` within a file
+----------------------
 ```posh
 > get-content $FILE | where {$_ -match "$PATTERN"}
 ```
@@ -36,6 +49,13 @@ Here we make use of the regular expression matching command `-match`, which supp
 ```posh
 > "foo bar" -match "b|c"
 True
+```
+
+
+Recursive `$ grep`
+------------------
+```posh
+> dir -include *.sas -recurse | select-string -pattern "$PATTERN" | select -unique path
 ```
 
 
