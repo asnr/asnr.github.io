@@ -1,45 +1,66 @@
 ---
 layout:     post
-title:      Unix on Powershell
-date:       2015-05-24 12:31:19
-summary:    1st
-categories: one
+title:      Powershell equivalents of Unix commands
+date:       2015-06-09 12:31:19
+summary:    
+categories: [powershell, unix]
 ---
 
-Remember, you probably don't want UTF-16 output, so use `| out-file "$FILE" -encoding utf8` or `| out-file "$FILE" -encoding ascii` instead of `> $FILE`, which is just syntactic sugar for `| out-file $FILE` anyway.
+Windows happens. So do plain text files. Sometimes, they happen together.
+
+The greybeard in you may reach instinctively for `Cygwin`,  
 
 
-`$ $CMD --help`
--------
+### Encodings
+
+Powershell, like the rest of Windows, thinks in UTF-16. One charming consequence of this is that passing an ASCII data file through a Powershell pipeline can double its size on disk. This is often not what you or your sysadmin wants, so instead of redirecting output to a file using `>`,
+
+```posh
+> type data.csv > data_copy.csv
+```
+
+use the `out-file` cmdlet (`>` is just synctatic sugar for `out-file` anyway):
+
+```posh
+> type data.csv | out-file data_copy.csv -encoding utf8
+```
+
+You can also use `-encoding ascii`.
+
+
+### `$ $CMD --help`
 ```posh
 > help $CMD
 ```
 The command `help` is an alias for `get-help`. The "REMARKS" section at the bottom of the `help` output has good further pointers, like what command to use to see examples and more detailed information.
 
-`$ cheat`
----------
+
+### `$ cheat`
+
+If you're not already using `cheat`, then stop reading and [be enlightened](https://github.com/chrisallenlane/cheat).
+
 ```posh
 > get-help $CMD -examples
 ```
-Weirdly `help $CMD -examples` does the `--more--` thing. I prefer using the scrollbar to pressing enter, but that's just me.
+Weirdly, `help $CMD -examples` is presented slightly differently; try both and see which you prefer.
 
 
-`$ head`
---------
+### `$ head`
+
 ```posh
-> get-content $FILE -TotalCount $n
+> get-content $FILE -TotalCount 10
 ```
 
 
-`$ tail`
---------
+### `$ tail`
+
 ```posh
-> get-content $FILE | select-object -last $n
+> get-content $FILE | select-object -last 10
 ```
 
 
-`$ grep` within a file
-----------------------
+### Vanilla `$ grep`
+
 ```posh
 > get-content $FILE | where {$_ -match "$PATTERN"}
 ```
@@ -52,8 +73,10 @@ True
 ```
 
 
-Recursive `$ grep`
-------------------
+### Recursive `$ grep`
+
+**What about returning lines instead of paths?**
+
 ```posh
 > dir -include *.sas -recurse | select-string -pattern "$PATTERN" | select -unique path
 ```
@@ -76,9 +99,6 @@ foo NOPE
 foo bar
 ```
 
-
-Calling Powershell from `cmd.exe`
----------------------------------
 
 A less than pleasant example
 ----------------------------
