@@ -6,49 +6,53 @@ summary:
 categories: [powershell, unix]
 ---
 
-Windows happens. So do plain text files. Sometimes, they happen together.
+Windows happens. So do text files. Sometimes, they happen together.
 
-The greybeard in you may reach instinctively for `Cygwin`,  
+(Put `Cygwin` down.)
 
 
 ### Encodings
 
-Powershell, like the rest of Windows, thinks in UTF-16. One charming consequence of this is that passing an ASCII data file through a Powershell pipeline can double its size on disk. This is often not what you or your sysadmin wants, so instead of redirecting output to a file using `>`,
+Powershell, like the rest of Windows, thinks in UTF-16. One charming consequence of this is that passing an ASCII data file through a Powershell pipeline will double its size on disk. This is often not what you or your sysadmin wants, so instead of redirecting output to a file using `>`,
 
 ```posh
-> type data.csv > data_copy.csv
+> cat data.csv > data_copy.csv
 ```
 
 use the `out-file` cmdlet (`>` is just synctatic sugar for `out-file` anyway):
 
 ```posh
-> type data.csv | out-file data_copy.csv -encoding utf8
+> cat data.csv | out-file data_copy.csv -encoding utf8
 ```
 
 You can also use `-encoding ascii`.
 
 
 ### `$ $CMD --help`
+
 ```posh
 > help $CMD
 ```
+
 The command `help` is an alias for `get-help`. The "REMARKS" section at the bottom of the `help` output has good further pointers, like what command to use to see examples and more detailed information.
 
 
 ### `$ cheat`
 
-If you're not already using `cheat`, then stop reading and [be enlightened](https://github.com/chrisallenlane/cheat).
+(If you're not already using `cheat`, then let me introduce you to [rainbows and sunshine](https://github.com/chrisallenlane/cheat).)
 
 ```posh
 > get-help $CMD -examples
 ```
-Weirdly, `help $CMD -examples` is presented slightly differently; try both and see which you prefer.
+
+Weirdly, `help $CMD -examples` is presented slightly differently; try both and see which output you prefer.
 
 
 ### `$ head`
 
 ```posh
 > get-content $FILE -TotalCount 10
+> cat $FILE -t 10
 ```
 
 
@@ -56,16 +60,24 @@ Weirdly, `help $CMD -examples` is presented slightly differently; try both and s
 
 ```posh
 > get-content $FILE | select-object -last 10
+> cat $FILE | select -l 10
 ```
 
 
 ### Vanilla `$ grep`
 
 ```posh
-> get-content $FILE | where {$_ -match "$PATTERN"}
+> select-string $PATTERN $FILE
 ```
 
-Here we make use of the regular expression matching command `-match`, which supports at least Extended Regular Expressions:
+`select-string` accepts perl regular expressions:
+
+```posh
+> (echo "<foo> <bar>" | select-string "<.*?>").matches | select -exp value
+<foo>
+```
+
+You can also use the `-match` command to iterate regexes quickly:
 
 ```posh
 > "foo bar" -match "b|c"
@@ -75,15 +87,14 @@ True
 
 ### Recursive `$ grep`
 
-**What about returning lines instead of paths?**
-
 ```posh
-> dir -include *.sas -recurse | select-string -pattern "$PATTERN" | select -unique path
+> get-childitem -include *.txt -recurse | select-string $PATTERN
+> ls -i *.txt -r | select-string $PATTERN
 ```
 
 
-`$ sed`
--------
+### `$ sed`
+
 
 ```posh
 > get-content $FILE | % {$_ -replace "$PATTERN","$REPLACEMENT"}
@@ -100,12 +111,7 @@ foo bar
 ```
 
 
-A less than pleasant example
-----------------------------
+### MOAR
 
-To replace all of the occurences of `||` in `in.txt` with `| |` and send the result to `out.txt` encoded in UTF-8:
-
-```posh
-get-content in.txt | % {$_ replace "\|\|","| |"} | % {$_ -replace "\|\|","| |"} | out-file out.txt -encoding utf8
-```
-
+ *  (A whole book)[https://www.penflip.com/powershellorg/a-unix-persons-guide-to-powershell]
+ *  (grep translations)[https://communary.wordpress.com/2014/11/10/grep-the-powershell-way/]
