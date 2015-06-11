@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Powershell equivalents of Unix commands
-date:       2015-06-09 12:31:19
+date:       2015-06-11
 summary:    
 categories: [powershell, unix]
 ---
@@ -68,12 +68,13 @@ Weirdly, `help $CMD -examples` is presented slightly differently; try both and s
 
 ```posh
 > select-string $PATTERN $FILE
+> sls $PATTERN $FILE  # sls is a defualt alias only in PowerShell 3.0 and later
 ```
 
 `select-string` accepts perl regular expressions:
 
 ```posh
-> (echo "<foo> <bar>" | select-string "<.*?>").matches | select -exp value
+> (echo "<foo> <bar>" | select-string "<.*?>").matches | select-object -exp value
 <foo>
 ```
 
@@ -89,7 +90,7 @@ True
 
 ```posh
 > get-childitem -include *.txt -recurse | select-string $PATTERN
-> ls -i *.txt -r | select-string $PATTERN
+> ls -i *.txt -r | sls $PATTERN
 ```
 
 
