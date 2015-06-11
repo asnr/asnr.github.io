@@ -114,5 +114,5 @@ foo bar
 
 ### MOAR
 
- *  (A whole book)[https://www.penflip.com/powershellorg/a-unix-persons-guide-to-powershell]
+ *  (The kitchen sink)[https://www.penflip.com/powershellorg/a-unix-persons-guide-to-powershell]
  *  (grep translations)[https://communary.wordpress.com/2014/11/10/grep-the-powershell-way/]
