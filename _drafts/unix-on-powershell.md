@@ -112,7 +112,15 @@ foo bar
 ```
 
 
-### MOAR
+### `$ cut`
 
- *  (The kitchen sink)[https://www.penflip.com/powershellorg/a-unix-persons-guide-to-powershell]
- *  (grep translations)[https://communary.wordpress.com/2014/11/10/grep-the-powershell-way/]
+```posh
+> echo 'fst_col,snd_col' | % {$_.split(':')[0]}
+fst_col
+```
+
+
+### Further references
+
+ *  grep translations: https://communary.wordpress.com/2014/11/10/grep-the-powershell-way/.
+ *  The kitchen sink: https://www.penflip.com/powershellorg/a-unix-persons-guide-to-powershell.
