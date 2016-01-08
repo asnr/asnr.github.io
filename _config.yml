@@ -5,6 +5,7 @@ author:
 description: "My blog."
 baseurl:     ""
 url:         ""
+date_format: "%-d %b, %Y"
 
 # Google services
 google_analytics:
