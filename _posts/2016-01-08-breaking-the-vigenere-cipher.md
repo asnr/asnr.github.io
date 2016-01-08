@@ -2,7 +2,7 @@
 layout:     post
 title:      Breaking the Vigenère cipher
 date:       2016-01-08
-summary:    Featuring basic probability theory and Reddit
+summary:    Featuring basic probability theory and Reddit.
 categories: [crypto, python]
 ---
 
