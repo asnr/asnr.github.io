@@ -1,10 +1,15 @@
 ---
 layout:     post
 title:      Your own R package repository, quick smart
-date:       2015-11-13
-summary:    
+date:       2016-03-06
+summary:    You'll never have to `?install.packages` again.
 categories: [R, windows]
 ---
+
+If you're writing R for as part of your day job, you'll invitably find yourself wrapping commonly used code into a package, and if you're working in a team, you'll... what? Drop the source code into a directory everyone has access to and tell the team to `install.packages("file://some_dir/my_package", repos = NULL, type = "source")`? Point them to a local, github or bitbucket repo and tell them to `devtools::install_git`,  `devtools::install_github` or `devtools::install_bitbucket` respectively?
+
+Wouldn't it be nice if everyone could just `install.packages('my_package')`?
+
 
 
 Make a directory, call it anything. (I called it `R`.)
