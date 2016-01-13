@@ -6,11 +6,13 @@ summary:    You'll never have to `?install.packages` again.
 categories: [R, windows]
 ---
 
+
+
 If you're writing R for as part of your day job, you'll invitably find yourself wrapping commonly used code into a package, and if you're working in a team, you'll... what? Drop the source code into a directory everyone has access to and tell the team to `install.packages("file://some_dir/my_package", repos = NULL, type = "source")`? Point them to a local, github or bitbucket repo and tell them to `devtools::install_git`,  `devtools::install_github` or `devtools::install_bitbucket` respectively?
 
+Let's set up a CRAN-like package repository to host your (or your company's) private packages. We might come in expecting that We don't want to spend time fiddling with servers or networks, so we're going to host our repository on a 
+
 Wouldn't it be nice if everyone could just `install.packages('my_package')`?
-
-
 
 Make a directory, call it anything. (I called it `R`.)
 
