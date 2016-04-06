@@ -3,7 +3,7 @@ layout:     post
 title:      Your own R package repository, quick smart
 date:       2016-03-06
 summary:    You'll never have to `?install.packages` again.
-categories: [R, windows]
+categories: [R-at-work, R, windows]
 ---
 
 
@@ -14,19 +14,95 @@ Let's set up a CRAN-like package repository to host your (or your company's) pri
 
 Wouldn't it be nice if everyone could just `install.packages('my_package')`?
 
-Make a directory, call it anything. (I called it `R`.)
+Make a directory, call it anything. (I called it `R`. I'm original like that.)
 
-Init state:
+Fill it with empty directories, so that it looks like this (again, the top level directory can be called whatever you want):
 
 ```
 R
 |-- bin
 |   `-- windows
 |       `-- contrib
-|           `-- 3.2
+|           `-- 3.2   <- this is the R major.minor version number
 `-- src
     `-- contrib
 ```
+
+When you're ready to deploy a package, open up R and run:
+
+```r
+R_min = sub("([0-9]+)\\.[0-9]+", "\\1", R.Version()$minor)
+R_ver = paste0(R.Version()$major, ".", R_min)
+
+# Make sure the working directory is the top level of the package
+
+# Build and deploy binary version of the package
+devtools::build(
+    path = file.path("path/to/repository", "bin/windows/contrib", R_ver),
+    binary = TRUE
+)
+# Build and deploy source version of the package
+devtools::build(path = file.path("path/to/repository", "src/contrib"))
+```
+
+At this point the repository will contain the the new package `.tar.gz` and `.zip` bundles, but calling `install.package()` will not find them, as `install.package()` first retrieves the repository's `PACKAGES` file to get the list of available packages, and the new package will not be on this list! To update the `PACKAGES` file, run
+
+```r
+# see previous code block for definition of R_ver variable
+tools::write_PACKAGES(file.path("path/to/repository", "bin/windows/contrib",
+                                R_ver),  
+                      type = "win.binary", verbose = TRUE)
+tools::write_PACKAGES(file.path("path/to/repository", "src/contrib"),
+                      type = "source", verbose = TRUE)
+```
+
+Once you've been doing this for a while, your package repository will look something like this:
+
+```
+R
+|-- bin
+|   `-- windows
+|       `-- contrib
+|           |-- 3.1
+|           |   |-- mypackage_0.1.0.zip
+|           |   |-- PACKAGES
+|           |   `-- PACKAGES.gz
+|           `-- 3.2
+|               |-- mypackage_0.1.1.zip
+|               |-- mypackage_0.2.0.zip
+|               |-- mypackage_0.2.1.zip
+|               |-- PACKAGES
+|               `-- PACKAGES.gz
+`-- src
+    `-- contrib
+        |-- mypackage_0.1.0.tar.gz
+        |-- mypackage_0.1.1.tar.gz
+        |-- mypackage_0.2.0.tar.gz
+        |-- mypackage_0.2.1.tar.gz
+        |-- PACKAGES
+        `-- PACKAGES.gz
+```
+
+
+Analysts should then add user-level `.Rprofile` (preferably in their home folder, not in their program install):
+
+```r
+# We use local() to avoid name collisions with the variable `r`
+local({r <- getOption("repos")
+       r["my_repo"] <- "file:S:/R/"
+       options(repos = r)})
+```
+
+Upon restarting R, analysts can then run
+
+```r
+install.packages("my_package")
+```
+
+
+
+
+
 
 build script:
 ```posh
