@@ -6,11 +6,25 @@ summary:    You'll never have to `?install.packages` again.
 categories: [R-at-work, R, windows]
 ---
 
+Heyo! This is the first of what will be a short series of posts on how to develop and distribute R packages within a workplace.
 
+This approach assumes all your colleagues are running Windows
 
-If you're writing R for as part of your day job, you'll invitably find yourself wrapping commonly used code into a package, and if you're working in a team, you'll... what? Drop the source code into a directory everyone has access to and tell the team to `install.packages("file://some_dir/my_package", repos = NULL, type = "source")`? Point them to a local, github or bitbucket repo and tell them to `devtools::install_git`,  `devtools::install_github` or `devtools::install_bitbucket` respectively?
+This approach taken here is opinionated and is assumes that all your colleagues are running Windows.
 
-Let's set up a CRAN-like package repository to host your (or your company's) private packages. We might come in expecting that We don't want to spend time fiddling with servers or networks, so we're going to host our repository on a 
+This setup has been refined this workflow over a year of trawling mailing lists, stackoverflow.
+
+I can't guarantee this is the best setup for everyone, but it 
+
+This I've spent the past year or so trawling through 
+
+This setup 
+
+If you're writing R for as part of your day job, you'll inevitably find yourself wrapping commonly used code into a package, and if you're working in a team, you'll... what? Drop the source code into a directory everyone has access to and tell the team to `install.packages("file://some_dir/my_package", repos = NULL, type = "source")`? Point them to a local, github or bitbucket repo and tell them to `devtools::install_local`,  `devtools::install_github` or `devtools::install_bitbucket` respectively?
+
+Let's set up a CRAN-like package repository to host your (or your company's) private packages. We might come in expecting that
+
+We don't want to spend time fiddling with servers or networks, so we're going to host our repository on a 
 
 Wouldn't it be nice if everyone could just `install.packages('my_package')`?
 
@@ -34,7 +48,7 @@ When you're ready to deploy a package, open up R and run:
 R_min = sub("([0-9]+)\\.[0-9]+", "\\1", R.Version()$minor)
 R_ver = paste0(R.Version()$major, ".", R_min)
 
-# Make sure the working directory is the top level of the package
+# Make sure the working directory is the root directory of the package source
 
 # Build and deploy binary version of the package
 devtools::build(
@@ -45,10 +59,10 @@ devtools::build(
 devtools::build(path = file.path("path/to/repository", "src/contrib"))
 ```
 
-At this point the repository will contain the the new package `.tar.gz` and `.zip` bundles, but calling `install.package()` will not find them, as `install.package()` first retrieves the repository's `PACKAGES` file to get the list of available packages, and the new package will not be on this list! To update the `PACKAGES` file, run
+At this point the repository will contain the the new package `.tar.gz` and `.zip` bundles, but calling `install.package()` will not find them, as `install.package()` first retrieves the repository's `PACKAGES` file to get the list of available packages, and the new package will not be on this list. To update the `PACKAGES` file, run
 
 ```r
-# see previous code block for definition of R_ver variable
+# see previous code block for definition of `R_ver` variable
 tools::write_PACKAGES(file.path("path/to/repository", "bin/windows/contrib",
                                 R_ver),  
                       type = "win.binary", verbose = TRUE)
@@ -83,8 +97,7 @@ R
         `-- PACKAGES.gz
 ```
 
-
-Analysts should then add user-level `.Rprofile` (preferably in their home folder, not in their program install):
+Analysts should add user-level `.Rprofile` (preferably in their home folder, not in their program install. What's your home directory you ask? I did too, and R has your answer: just evaluate `path.expand('~')`):
 
 ```r
 # We use local() to avoid name collisions with the variable `r`
