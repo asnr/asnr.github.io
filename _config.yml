@@ -8,7 +8,7 @@ url:         ""
 date_format: "%-d %b, %Y"
 
 # Google services
-google_analytics:
+google_analytics: UA-88601712-1
 google_verification:
 
 # Optional features
