@@ -24,4 +24,7 @@ thailand_tax.save!
 This is fine and dandy so long there is a tax record for Thailand, but if there isn't you're going to get a `undefined method 'sales' for nil` error. Which will 
 https://relishapp.com/rspec/rspec-rails/docs/upgrade#pending-migration-checks
 
+
+## Data migrations in rake tasks
+
 There is one inconvenient thing about using rake tasks for data fixes: they need to be applied manually for every environment. If you have staging, user acceptance testing and production enviroments for example, you're going to have to run the task three times. That's three opportunities to make a mistake and three lots of deploys to wait for.
