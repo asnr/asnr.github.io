@@ -20,7 +20,7 @@ Patrick McKenzie suggests conducting the salary negotiation by email, because it
 
 Don't get distracted; don't tell them your number.
 
-This is easier said than done though, so I recommend practising. Get your friend/partner/image in the mirror to ask you variations of "So, what is your current salary?". Do this until your response is automatic.
+Maybe practise this before hand?
 
 ## Give yourself time to get a counter-offer
 
