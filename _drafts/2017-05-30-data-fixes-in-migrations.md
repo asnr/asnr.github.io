@@ -26,9 +26,8 @@ This is fine and dandy so long there is a tax record for Thailand, but if there 
 Things could get even weirder if there are multiple instances of your app running, which might be the case if customers can install the app on their own network. In this case, writing a data fix requested by one customer as a data migration will lead to all of your other customers' data changing as well. Happy happy fun times.
 
 
-
 ## Data migrations in rake tasks
 
 The standard way of implementing data fixes is as a rake task, which are only run when you run them. While this is exactly the flexibility we want, it can also be an operational risk. If on top of production you have separate QA and user acceptance testing environments that sync against production data, you'll to have run the task three times on three different boxes over ssh. That's three manual interventions to remember and three opportunities to make a mistake.
 
-This is exactly the situation my team found itself in
+My team was recently in this situation and we dealt with it by adding a data fix step to the deployment pipeline that ran a special rake task, which we called `data_fix:run_by_continuous_integration`.
