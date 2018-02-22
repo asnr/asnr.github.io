@@ -1,10 +1,12 @@
 ---
 layout:     post
-title:      Elisp you so crazy
+title:      Emacs you so crazy
 date:       2017-12-06
 summary:    💰💰💰
 categories: [emacs, elisp]
 ---
+
+## Elisp
 
 - Namespace, or lack of. Have to prepend everything (variables, functions) with `my-module-name-`
 
