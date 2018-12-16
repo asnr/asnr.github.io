@@ -10,7 +10,7 @@ As Tristan Hume [says](http://thume.ca/2017/03/04/my-text-editor-journey-vim-spa
 
 Emacs refuses to do decide on *anything*, which means that conventions are all over the place and packages tread on each other and double up on work. And the code, oh my god, the code. The fact that the built in help docs link to the source code for *every* function and global variable in Emacs is amazing, but after diving under the covers a handful of times you start to hold your nose before the next adventure.
 
-- Syntax highlighting. This is as fundamental as it gets for a text editor. There should be one way to do it, and it should robust. In Emacs, you have three. Syntax tables probide a first, basic layer which is often used to take care of things like comments (but also things like navigation, because, why not?). You can manipulate a syntax table using delightfully transparent calls such as
+- Syntax highlighting. This is as fundamental as it gets for a text editor. There should be one way to do it, and it should robust. In Emacs, you have three. Syntax tables provide a first, basic layer which is often used to take care of things like comments (but also things like navigation, because, why not?). You can manipulate a syntax table using delightfully transparent calls such as
 
   ```
   (modify-syntax-entry ?\/ ". 23" a-syntax-table)
@@ -30,20 +30,18 @@ Emacs refuses to do decide on *anything*, which means that conventions are all o
 
 - Syntax errors in `js2-mode` that overlap with `flycheck` syntax errors.
 
-- I noticed that while editing elisp code, if I switched to another window and back to Spacemacs, my cursor would jump to another point in the buffer, seemingly at random. After digging around for a couple of hours, I discovered the following chain of execution:
+- I noticed that while editing elisp code if I switched to another window and back to Spacemacs, my cursor would jump to another point in the buffer, seemingly at random. After digging around for a couple of hours, I discovered the following chain of execution:
 
   1. On switching windows, a `focus-out-hook` that I defined fires, saving all unsaved buffers.
   2. The `after-save-hook` hooks fire. In particular, `auto-compile-byte-compile`, which was added to the hook by the `auto-compile` package, is executed.
   3. To check whether it should try to compile the current buffer, `auto-compile-byte-compile` first checks that there aren't any unbalanced parantheses by calling `check-parens`, which is defined in core Emacs.
   4. If `check-parens` finds an unbalanced parenthesis pair, it will helpfully move the pointer to the offending parenthesis. It will also print a message to the minibuffer stating the problem, but this was being obscured by another message from a failing call to `re-search-forward` (that was a lovely goose chase that took an hour of my time).
 
-  There are so many questions here. Why do we even care about auto-compiling elisp code on every file save? According to the [README](https://github.com/emacscollective/auto-compile), "these modes guarantee that Emacs never loads outdated byte code files." Well, loading outdated byte code files sounds bad. Why would Emacs even do such a thing? What happens if it does? I don't know, and frankly that's a dragon I'm going to let lie.
-
-  More importantly, why is `check-parens` modifying the pointer position at all? If there are unbalanced parens, I don't want my pointer neurotically jumping back and forth, and a minibuffer message is a terrible way to communicate the problem to me. There is a standard solution to this problem, and that's syntax errors provided by the likes of [flycheck](http://www.flycheck.org/en/latest/). But of course, because core Emacs doesn't have any opinions about communicating static code errors to users, we get this bizarro behaviour that doesn't fit with anything else.
+  Why is `check-parens` modifying the pointer position at all? If there are unbalanced parens, I don't want my pointer neurotically jumping back and forth, and a minibuffer message is a terrible way to communicate the problem to me. There is a standard solution to this problem, and that's syntax errors provided by the likes of [flycheck](http://www.flycheck.org/en/latest/). But of course, because core Emacs doesn't have any opinions about communicating static code errors to users, we get this bizarro behaviour that doesn't fit with anything else.
 
 ## Elisp
 
-- Namespace, or lack of. Have to prepend everything (variables, functions) with `my-module-name-`
+- Namespaces, or lack of. Have to prepend everything (variables, functions) with `my-module-name-`
 
 - Importing code from another file is a pain! No simple way to import another file in the same directory.
 
